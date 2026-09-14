@@ -1,0 +1,1504 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Confecciones WA",
+        "description": "Documentación de la API para el sistema de Confecciones WA",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Servidor Local"
+        }
+    ],
+    "paths": {
+        "/api/colores": {
+            "get": {
+                "tags": [
+                    "Colores"
+                ],
+                "summary": "Listar colores",
+                "description": "Obtiene el listado paginado de colores.",
+                "operationId": "2b87f99a0289749a787f97016a9dee54",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Buscar por nombre.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Rojo"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de registros por página.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10,
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Colores obtenidos correctamente"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Colores"
+                ],
+                "summary": "Registrar color",
+                "description": "Crea un nuevo color.",
+                "operationId": "70a120a6bbdbd300f1f60ec62591e4e3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "abbreviation",
+                                    "is_active"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Azul"
+                                    },
+                                    "abbreviation": {
+                                        "type": "string",
+                                        "example": "AZ"
+                                    },
+                                    "is_active": {
+                                        "description": "true activo, false inactivo",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Color creado correctamente"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/colores/{id}": {
+            "put": {
+                "tags": [
+                    "Colores"
+                ],
+                "summary": "Actualizar color",
+                "description": "Actualiza la información de un color.",
+                "operationId": "1ee224ea51203dc99c1b006f1a0d75bf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del color",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "abbreviation",
+                                    "is_active"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Rojo Oscuro"
+                                    },
+                                    "abbreviation": {
+                                        "type": "string",
+                                        "example": "ROD"
+                                    },
+                                    "is_active": {
+                                        "description": "true activo, false inactivo",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Color actualizado correctamente"
+                    },
+                    "404": {
+                        "description": "Color no encontrado"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/guides": {
+            "get": {
+                "tags": [
+                    "Guides"
+                ],
+                "summary": "Listar guías",
+                "description": "Obtiene el listado paginado de guías.",
+                "operationId": "b946128a2194d4aa4ee0edce9aa6ee96",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Buscar por número de guía.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "GUI-001"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de registros por página.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10,
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Guías obtenidas correctamente"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Guides"
+                ],
+                "summary": "Registrar guía",
+                "description": "Crea una nueva guía.",
+                "operationId": "04c33383780223813ab56b0cea0e87c5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "guide_number",
+                                    "attached_file",
+                                    "is_active"
+                                ],
+                                "properties": {
+                                    "guide_number": {
+                                        "type": "string",
+                                        "example": "GUI-001"
+                                    },
+                                    "issue_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-07-30",
+                                        "nullable": true
+                                    },
+                                    "attached_file": {
+                                        "description": "Archivo adjunto obligatorio",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Guía creada correctamente"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/guides/{id}": {
+            "post": {
+                "tags": [
+                    "Guides"
+                ],
+                "summary": "Actualizar guía",
+                "description": "Actualiza la información de una guía. Usa POST enviando _method=PUT debido al soporte de envío de archivos.",
+                "operationId": "0315880661a86b36893a851420e4dde3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la guía",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "guide_number",
+                                    "is_active",
+                                    "_method"
+                                ],
+                                "properties": {
+                                    "guide_number": {
+                                        "type": "string",
+                                        "example": "GUI-001"
+                                    },
+                                    "issue_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-07-30",
+                                        "nullable": true
+                                    },
+                                    "attached_file": {
+                                        "description": "Archivo adjunto opcional para reemplazar el existente",
+                                        "type": "string",
+                                        "format": "binary",
+                                        "nullable": true
+                                    },
+                                    "_method": {
+                                        "description": "Requerido para simular PUT via POST y soportar archivos multipart",
+                                        "type": "string",
+                                        "example": "PUT"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Guía actualizada correctamente"
+                    },
+                    "404": {
+                        "description": "Guía no encontrada"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/invoices": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Listar facturas",
+                "description": "Obtiene el listado paginado de facturas.",
+                "operationId": "0757acd1a0a3d8632bb68443f2c8cda3",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Buscar por número de factura.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "INV-001"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de registros por página.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10,
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Facturas obtenidas correctamente"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Registrar factura",
+                "description": "Crea una nueva factura.",
+                "operationId": "7a85316a950ac312f5bd5ce684371e00",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "invoice_number",
+                                    "total_amount",
+                                    "issue_date",
+                                    "is_active"
+                                ],
+                                "properties": {
+                                    "production_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "invoice_number": {
+                                        "type": "string",
+                                        "example": "INV-001"
+                                    },
+                                    "total_amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1500.5
+                                    },
+                                    "currency": {
+                                        "description": "USD o PEN",
+                                        "type": "string",
+                                        "example": "USD"
+                                    },
+                                    "issue_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-07-30"
+                                    },
+                                    "due_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-08-30",
+                                        "nullable": true
+                                    },
+                                    "payment_status": {
+                                        "description": "PENDIENTE, PAGADA, ANULADA",
+                                        "type": "string",
+                                        "example": "PENDIENTE"
+                                    },
+                                    "attached_file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Factura creada correctamente"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/invoices/{id}": {
+            "post": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Actualizar factura",
+                "description": "Actualiza la información de una factura. Usa POST enviando _method=PUT debido al soporte de envío de archivos.",
+                "operationId": "a7b3f28c56fb6181037bd6a29276fe72",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la factura",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "invoice_number",
+                                    "total_amount",
+                                    "issue_date",
+                                    "is_active",
+                                    "_method"
+                                ],
+                                "properties": {
+                                    "production_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "invoice_number": {
+                                        "type": "string",
+                                        "example": "INV-001"
+                                    },
+                                    "total_amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1500.5
+                                    },
+                                    "currency": {
+                                        "description": "USD o PEN",
+                                        "type": "string",
+                                        "example": "USD"
+                                    },
+                                    "issue_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-07-30"
+                                    },
+                                    "due_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-08-30",
+                                        "nullable": true
+                                    },
+                                    "payment_status": {
+                                        "description": "PENDIENTE, PAGADA, ANULADA",
+                                        "type": "string",
+                                        "example": "PENDIENTE"
+                                    },
+                                    "attached_file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "nullable": true
+                                    },
+                                    "_method": {
+                                        "description": "Requerido para simular PUT via POST",
+                                        "type": "string",
+                                        "example": "PUT"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Factura actualizada correctamente"
+                    },
+                    "404": {
+                        "description": "Factura no encontrada"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/productions": {
+            "get": {
+                "tags": [
+                    "Productions"
+                ],
+                "summary": "Listar producciones",
+                "description": "Obtiene el listado paginado de órdenes de producción.",
+                "operationId": "98788203ce6047c9a6bb73e79666501e",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Buscar por número de producción o compra.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "PROD-001"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de registros por página.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10,
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Producciones obtenidas correctamente"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Productions"
+                ],
+                "summary": "Registrar producción",
+                "description": "Crea un nuevo registro de producción.",
+                "operationId": "dd49046851d9ebca20d95434e39f8d6f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "quantity",
+                                    "purchase_order_number",
+                                    "production_order_number",
+                                    "purchase_order_id",
+                                    "is_active"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 100
+                                    },
+                                    "purchase_order_number": {
+                                        "type": "string",
+                                        "example": "PO-001"
+                                    },
+                                    "production_order_number": {
+                                        "type": "string",
+                                        "example": "PROD-001"
+                                    },
+                                    "purchase_order_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Producción creada correctamente"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/productions/{id}": {
+            "put": {
+                "tags": [
+                    "Productions"
+                ],
+                "summary": "Actualizar producción",
+                "description": "Actualiza la información de un registro de producción.",
+                "operationId": "47065c99d62c5162a42bb37fd4d0b27f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la producción",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "quantity",
+                                    "purchase_order_number",
+                                    "production_order_number",
+                                    "purchase_order_id",
+                                    "is_active"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 150
+                                    },
+                                    "purchase_order_number": {
+                                        "type": "string",
+                                        "example": "PO-001"
+                                    },
+                                    "production_order_number": {
+                                        "type": "string",
+                                        "example": "PROD-001"
+                                    },
+                                    "purchase_order_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Producción actualizada correctamente"
+                    },
+                    "404": {
+                        "description": "Producción no encontrada"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/purchase-orders": {
+            "get": {
+                "tags": [
+                    "Purchase Orders"
+                ],
+                "summary": "Listar órdenes de compra",
+                "description": "Obtiene el listado paginado de órdenes de compra.",
+                "operationId": "38e1492dee51126a7f7595a16a37e9c2",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Buscar por número de orden.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "PO-001"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de registros por página.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10,
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Órdenes obtenidas correctamente"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Purchase Orders"
+                ],
+                "summary": "Registrar orden de compra",
+                "description": "Crea una nueva orden de compra.",
+                "operationId": "faadb3c8cfadc2c6ef6c47cf25eda195",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "order_number",
+                                    "unit_price",
+                                    "is_active"
+                                ],
+                                "properties": {
+                                    "order_number": {
+                                        "type": "string",
+                                        "example": "PO-001"
+                                    },
+                                    "unit_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 12.5
+                                    },
+                                    "issue_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-07-30",
+                                        "nullable": true
+                                    },
+                                    "attached_file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Orden creada correctamente"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/purchase-orders/{id}": {
+            "post": {
+                "tags": [
+                    "Purchase Orders"
+                ],
+                "summary": "Actualizar orden de compra",
+                "description": "Actualiza la información de una orden de compra. Usa POST enviando _method=PUT debido al soporte de envío de archivos.",
+                "operationId": "ea41423756464709deef866ac3d4c406",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la orden de compra",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "order_number",
+                                    "unit_price",
+                                    "is_active",
+                                    "_method"
+                                ],
+                                "properties": {
+                                    "order_number": {
+                                        "type": "string",
+                                        "example": "PO-001"
+                                    },
+                                    "unit_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 12.5
+                                    },
+                                    "issue_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-07-30",
+                                        "nullable": true
+                                    },
+                                    "attached_file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "nullable": true
+                                    },
+                                    "_method": {
+                                        "description": "Requerido para simular PUT via POST y soportar archivos multipart",
+                                        "type": "string",
+                                        "example": "PUT"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Orden actualizada correctamente"
+                    },
+                    "404": {
+                        "description": "Orden no encontrada"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/usuarios": {
+            "get": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Listar usuarios",
+                "description": "Obtiene el listado paginado de usuarios con sus datos completos y roles.",
+                "operationId": "dbe72d85943ad52189a017183632a4dd",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Buscar por nombres, apellidos, documento o correo.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Juan"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de registros por página.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10,
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuarios obtenidos correctamente"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Registrar usuario",
+                "description": "Crea un nuevo usuario con todos sus datos y un rol.",
+                "operationId": "82b7b563affba6ec7aefa2bba435f41e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "password",
+                                    "is_active"
+                                ],
+                                "properties": {
+                                    "document_type_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "document_number": {
+                                        "type": "string",
+                                        "example": "12345678",
+                                        "nullable": true
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Juan Carlos",
+                                        "nullable": true
+                                    },
+                                    "last_name_father": {
+                                        "type": "string",
+                                        "example": "Perez",
+                                        "nullable": true
+                                    },
+                                    "last_name_mother": {
+                                        "type": "string",
+                                        "example": "Gomez",
+                                        "nullable": true
+                                    },
+                                    "gender_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "juan@correo.com",
+                                        "nullable": true
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456"
+                                    },
+                                    "rol_id": {
+                                        "type": "integer",
+                                        "example": 2,
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "description": "true activo, false inactivo",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuario creado correctamente"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/usuarios/{id}": {
+            "put": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Actualizar usuario",
+                "description": "Actualiza la información completa de un usuario y su rol.",
+                "operationId": "0bde4772cb746960ac7cfdedda7ee90c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del usuario",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "is_active"
+                                ],
+                                "properties": {
+                                    "document_type_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "document_number": {
+                                        "type": "string",
+                                        "example": "12345678",
+                                        "nullable": true
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Juan Carlos",
+                                        "nullable": true
+                                    },
+                                    "last_name_father": {
+                                        "type": "string",
+                                        "example": "Perez",
+                                        "nullable": true
+                                    },
+                                    "last_name_mother": {
+                                        "type": "string",
+                                        "example": "Gomez",
+                                        "nullable": true
+                                    },
+                                    "gender_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "juan@correo.com",
+                                        "nullable": true
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456",
+                                        "nullable": true
+                                    },
+                                    "rol_id": {
+                                        "type": "integer",
+                                        "example": 2,
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "description": "true activo, false inactivo",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuario actualizado correctamente"
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Iniciar sesión",
+                "operationId": "8dcb70df1020986038d098cc08d05dae",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "admin@correo.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token generado correctamente"
+                    },
+                    "401": {
+                        "description": "Credenciales no válidas"
+                    },
+                    "500": {
+                        "description": "Error al procesar el token"
+                    }
+                }
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Registrar nuevo cliente",
+                "description": "Endpoint público para que los clientes se registren en la tienda virtual completando todos sus datos. Automáticamente asigna el rol de USUARIO EXTERNO y devuelve el token de sesión.",
+                "operationId": "d764dd091cc4494ae0baf360b03319f3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "last_name_father",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "document_type_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "document_number": {
+                                        "type": "string",
+                                        "example": "12345678",
+                                        "nullable": true
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Juan Carlos"
+                                    },
+                                    "last_name_father": {
+                                        "type": "string",
+                                        "example": "Perez"
+                                    },
+                                    "last_name_mother": {
+                                        "type": "string",
+                                        "example": "Gomez",
+                                        "nullable": true
+                                    },
+                                    "gender_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "juan@correo.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuario registrado y autenticado correctamente"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    }
+                }
+            }
+        },
+        "/api/auth/me": {
+            "get": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Obtener usuario autenticado",
+                "operationId": "b9abb1a7a74670a19c215c2c133f14d8",
+                "responses": {
+                    "200": {
+                        "description": "Información del usuario"
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Cerrar sesión",
+                "description": "Invalida el token JWT del usuario autenticado.",
+                "operationId": "69281b12abb272c76871f19cb17ca563",
+                "responses": {
+                    "200": {
+                        "description": "Sesión cerrada correctamente"
+                    },
+                    "401": {
+                        "description": "Token inválido o no autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Renovar token",
+                "description": "Genera un nuevo token JWT para el usuario autenticado.",
+                "operationId": "b2eae7a8032954d25b46c7ec6f489c68",
+                "responses": {
+                    "200": {
+                        "description": "Nuevo token generado correctamente"
+                    },
+                    "401": {
+                        "description": "Token inválido o expirado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Colores",
+            "description": "Colores"
+        },
+        {
+            "name": "Guides",
+            "description": "Guides"
+        },
+        {
+            "name": "Invoices",
+            "description": "Invoices"
+        },
+        {
+            "name": "Productions",
+            "description": "Productions"
+        },
+        {
+            "name": "Purchase Orders",
+            "description": "Purchase Orders"
+        },
+        {
+            "name": "Usuarios",
+            "description": "Usuarios"
+        },
+        {
+            "name": "Autenticación",
+            "description": "Autenticación"
+        }
+    ]
+}
