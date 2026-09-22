@@ -37,6 +37,13 @@ class ApiProductionController extends Controller
                 required: false,
                 description: 'Cantidad de registros por página.',
                 schema: new OA\Schema(type: 'integer', default: 10, example: 10)
+            ),
+            new OA\Parameter(
+                name: 'date',
+                in: 'query',
+                required: false,
+                description: 'Filtrar por fecha de creación (YYYY-MM-DD).',
+                schema: new OA\Schema(type: 'string', format: 'date', example: '2026-09-15')
             )
         ],
         responses: [
@@ -49,14 +56,23 @@ class ApiProductionController extends Controller
     {
         $search   = $request->string('search');
         $per_page = $request->integer('per_page', 10);
+        $date     = $request->string('date');
 
-        // Se pueden agregar las relaciones 'user' o 'purchaseOrder' si existen en el modelo
-        $productions = Production::where(function ($q) use ($search) {
+        // Eager load purchaseOrder para obtener el unit_price, colors y guides
+        $query = Production::with(['purchaseOrder', 'colors', 'guides']);
+        
+        if ($search->isNotEmpty()) {
+            $query->where(function ($q) use ($search) {
                 $q->where('production_order_number', 'like', '%' . $search . '%')
                   ->orWhere('purchase_order_number', 'like', '%' . $search . '%');
-            })
-            ->orderBy('id', 'desc')
-            ->paginate($per_page);
+            });
+        }
+
+        if ($date->isNotEmpty()) {
+            $query->whereDate('created_at', $date);
+        }
+
+        $productions = $query->orderBy('id', 'desc')->paginate($per_page);
 
         return response()->json([
             'productions' => ProductionCollection::make($productions),
@@ -107,6 +123,7 @@ class ApiProductionController extends Controller
                 'purchase_order_number'   => ['required', 'string', 'max:50'],
                 'production_order_number' => ['required', 'string', 'max:50'],
                 'purchase_order_id'       => ['required', 'integer', 'exists:purchase_orders,id'],
+                'unit_price'              => ['nullable', 'numeric', 'min:0'],
                 'is_active'               => ['required', 'boolean'],
             ], [
                 'user_id.required'                 => 'El usuario es obligatorio.',
@@ -130,13 +147,26 @@ class ApiProductionController extends Controller
         $production->purchase_order_number   = $request->purchase_order_number;
         $production->production_order_number = $request->production_order_number;
         $production->purchase_order_id       = $request->purchase_order_id;
+        $production->unit_price              = $request->unit_price;
         $production->is_active               = $request->is_active;
+        if ($request->has('production_date') && $request->production_date) {
+            $production->created_at = $request->production_date;
+        }
         $production->save();
+
+        // Sincronizar colores y guías en las tablas pivote
+        if ($request->has('colors')) {
+            $production->colors()->sync($request->input('colors', []));
+        }
+        if ($request->has('guides')) {
+            $guideIds = array_slice((array) $request->input('guides', []), 0, 10); // máx 10
+            $production->guides()->sync($guideIds);
+        }
 
         return response()->json([
             'codigo'  => 200,
             'mensaje' => 'Producción creada correctamente',
-            'production' => ProductionResource::make($production),
+            'production' => ProductionResource::make($production->load('colors', 'guides')),
         ], 200);
     }
 
@@ -188,6 +218,7 @@ class ApiProductionController extends Controller
                 'purchase_order_number'   => ['required', 'string', 'max:50'],
                 'production_order_number' => ['required', 'string', 'max:50'],
                 'purchase_order_id'       => ['required', 'integer', 'exists:purchase_orders,id'],
+                'unit_price'              => ['nullable', 'numeric', 'min:0'],
                 'is_active'               => ['required', 'boolean'],
             ], [
                 'user_id.required'                 => 'El usuario es obligatorio.',
@@ -210,12 +241,25 @@ class ApiProductionController extends Controller
         $production->purchase_order_number   = $request->purchase_order_number;
         $production->production_order_number = $request->production_order_number;
         $production->purchase_order_id       = $request->purchase_order_id;
+        $production->unit_price              = $request->unit_price;
         $production->is_active               = $request->is_active;
+        if ($request->has('production_date') && $request->production_date) {
+            $production->created_at = $request->production_date;
+        }
         $production->save();
+
+        // Sincronizar colores y guías en las tablas pivote
+        if ($request->has('colors')) {
+            $production->colors()->sync($request->input('colors', []));
+        }
+        if ($request->has('guides')) {
+            $guideIds = array_slice((array) $request->input('guides', []), 0, 10); // máx 10
+            $production->guides()->sync($guideIds);
+        }
 
         return response()->json([
             'mensaje' => 'Producción actualizada correctamente',
-            'production' => ProductionResource::make($production),
+            'production' => ProductionResource::make($production->load('purchaseOrder', 'colors', 'guides')),
         ], 200);
     }
 }

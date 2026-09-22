@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ApiColorController;
+use App\Http\Controllers\Api\ApiDashboardController;
 use App\Http\Controllers\Api\ApiGuideController;
 use App\Http\Controllers\Api\ApiInvoiceController;
 use App\Http\Controllers\Api\ApiProductionController;
@@ -42,6 +43,9 @@ Route::middleware('jwt.verify')->group(function () {
         Route::get('me', [AuthController::class, 'me'])->name('me');
         Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
     });
+
+    // Dashboard
+    Route::get('/dashboard', [ApiDashboardController::class, 'index']);
 
     // Gestión de Roles
     Route::prefix('roles')->group(function () {

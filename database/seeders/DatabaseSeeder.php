@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             GenderSeeder::class,
             DocumentTypeSeeder::class,
+            ColorSeeder::class,
             PermissionsDemoSeeder::class,
         ]);
     }

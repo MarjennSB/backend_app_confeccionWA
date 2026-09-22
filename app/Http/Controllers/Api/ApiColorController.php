@@ -100,13 +100,12 @@ class ApiColorController extends Controller
         try {
             $request->validate([
                 'name' => ['required', 'string', 'max:50', 'unique:colors,name'],
-                'abbreviation' => ['required', 'string', 'max:10', 'unique:colors,abbreviation'],
+                'abbreviation' => ['nullable', 'string', 'max:10', 'unique:colors,abbreviation'],
                 'is_active' => ['required', 'boolean'],
             ], [
                 'name.required' => 'El nombre es obligatorio.',
                 'name.unique'   => 'El nombre ya está registrado.',
                 'name.max'      => 'El nombre no puede exceder 50 caracteres.',
-                'abbreviation.required' => 'La abreviatura es obligatoria.',
                 'abbreviation.unique'   => 'La abreviatura ya está registrada.',
                 'abbreviation.max'      => 'La abreviatura no puede exceder 10 caracteres.',
             ]);
@@ -119,7 +118,7 @@ class ApiColorController extends Controller
 
         $color = new Color();
         $color->name = $request->name;
-        $color->abbreviation = $request->abbreviation;
+        $color->abbreviation = $request->abbreviation ?: strtoupper(substr($request->name, 0, 3));
         $color->is_active = $request->is_active;
         $color->save();
 
@@ -171,13 +170,12 @@ class ApiColorController extends Controller
         try {
             $request->validate([
                 'name'         => ['required', 'string', 'max:50', 'unique:colors,name,' . $color->id],
-                'abbreviation' => ['required', 'string', 'max:10', 'unique:colors,abbreviation,' . $color->id],
+                'abbreviation' => ['nullable', 'string', 'max:10', 'unique:colors,abbreviation,' . $color->id],
                 'is_active'    => ['required', 'boolean'],
             ], [
                 'name.required' => 'El nombre es obligatorio.',
                 'name.unique'   => 'El nombre ya está registrado.',
                 'name.max'      => 'El nombre no puede exceder 50 caracteres.',
-                'abbreviation.required' => 'La abreviatura es obligatoria.',
                 'abbreviation.unique'   => 'La abreviatura ya está registrada.',
                 'abbreviation.max'      => 'La abreviatura no puede exceder 10 caracteres.',
             ]);
@@ -189,7 +187,7 @@ class ApiColorController extends Controller
         }
 
         $color->name      = $request->name;
-        $color->abbreviation = $request->abbreviation;
+        $color->abbreviation = $request->abbreviation ?: strtoupper(substr($request->name, 0, 3));
         $color->is_active = $request->is_active;
         $color->save();
 

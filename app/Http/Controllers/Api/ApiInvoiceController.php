@@ -50,12 +50,25 @@ class ApiInvoiceController extends Controller
     {
         $search   = $request->string('search');
         $per_page = $request->integer('per_page', 10);
+        $date     = $request->string('date');
 
-        $invoices = Invoice::where(function ($q) use ($search) {
-                $q->where('invoice_number', 'like', '%' . $search . '%');
-            })
-            ->orderBy('id', 'desc')
-            ->paginate($per_page);
+        $query = Invoice::query();
+
+        if ($search->isNotEmpty()) {
+            $query->where(function ($q) use ($search) {
+                $q->where('invoice_number', 'like', '%' . $search . '%')
+                  ->orWhereHas('production', function($query) use ($search) {
+                      $query->where('purchase_order_number', 'like', '%' . $search . '%')
+                            ->orWhere('production_order_number', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
+        if ($date->isNotEmpty()) {
+            $query->whereDate('issue_date', $date);
+        }
+
+        $invoices = $query->orderBy('id', 'desc')->paginate($per_page);
 
         return response()->json([
             'invoices'   => InvoiceCollection::make($invoices),

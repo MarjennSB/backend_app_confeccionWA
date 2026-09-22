@@ -101,14 +101,13 @@ class ApiPurchaseOrderController extends Controller
         try {
             $request->validate([
                 'order_number'  => ['required', 'string', 'max:50', 'unique:purchase_orders,order_number'],
-                'unit_price'    => ['required', 'numeric', 'min:0'],
+                'unit_price'    => ['nullable', 'numeric', 'min:0'],
                 'issue_date'    => ['nullable', 'date'],
                 'attached_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'], // max 5MB
                 'is_active'     => ['required', 'boolean'],
             ], [
                 'order_number.required' => 'El número de orden es obligatorio.',
                 'order_number.unique'   => 'El número de orden ya está registrado.',
-                'unit_price.required'   => 'El precio unitario es obligatorio.',
                 'unit_price.numeric'    => 'El precio unitario debe ser un número.',
             ]);
         } catch (ValidationException $e) {
@@ -182,14 +181,13 @@ class ApiPurchaseOrderController extends Controller
         try {
             $request->validate([
                 'order_number'  => ['required', 'string', 'max:50', 'unique:purchase_orders,order_number,' . $purchaseOrder->id],
-                'unit_price'    => ['required', 'numeric', 'min:0'],
+                'unit_price'    => ['nullable', 'numeric', 'min:0'],
                 'issue_date'    => ['nullable', 'date'],
                 'attached_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'], // max 5MB
                 'is_active'     => ['required', 'boolean'],
             ], [
                 'order_number.required' => 'El número de orden es obligatorio.',
                 'order_number.unique'   => 'El número de orden ya está registrado.',
-                'unit_price.required'   => 'El precio unitario es obligatorio.',
                 'unit_price.numeric'    => 'El precio unitario debe ser un número.',
             ]);
         } catch (ValidationException $e) {

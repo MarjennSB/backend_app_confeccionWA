@@ -48,12 +48,16 @@ class ApiGuideController extends Controller
     )]
     public function index(Request $request)
     {
-        $search   = $request->string('search');
-        $per_page = $request->integer('per_page', 10);
+        $search     = $request->input('search');
+        $issue_date = $request->input('issue_date');
+        $per_page   = $request->integer('per_page', 10);
+        $available  = $request->boolean('available', false); // Solo guías sin producción asignada
 
         $guides = Guide::where(function ($q) use ($search) {
                 $q->where('guide_number', 'like', '%' . $search . '%');
             })
+            ->when($issue_date, fn($q) => $q->whereDate('issue_date', $issue_date))
+            ->when($available, fn($q) => $q->whereDoesntHave('productions'))
             ->orderBy('id', 'desc')
             ->paginate($per_page);
 
@@ -101,12 +105,11 @@ class ApiGuideController extends Controller
             $request->validate([
                 'guide_number'  => ['required', 'string', 'max:50', 'unique:guides,guide_number'],
                 'issue_date'    => ['nullable', 'date'],
-                'attached_file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
-                'is_active'     => ['required', 'boolean'],
+                'attached_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+                'is_active'     => ['nullable'],
             ], [
                 'guide_number.required'  => 'El número de guía es obligatorio.',
                 'guide_number.unique'    => 'El número de guía ya está registrado.',
-                'attached_file.required' => 'El archivo adjunto es obligatorio.',
             ]);
         } catch (ValidationException $e) {
             return response()->json([
@@ -118,10 +121,14 @@ class ApiGuideController extends Controller
         $guide = new Guide();
         $guide->guide_number = $request->guide_number;
         $guide->issue_date   = $request->issue_date;
-        $guide->is_active    = $request->is_active;
+        $guide->is_active    = filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN);
 
-        $path = $request->file('attached_file')->store('guides', 'public');
-        $guide->attached_file = $path;
+        if ($request->hasFile('attached_file')) {
+            $path = $request->file('attached_file')->store('guides', 'public');
+            $guide->attached_file = $path;
+        } else {
+            $guide->attached_file = 'pending'; // Evitar error 500 de base de datos porque el campo no es nullable en Postgres
+        }
 
         $guide->save();
 
@@ -176,8 +183,8 @@ class ApiGuideController extends Controller
             $request->validate([
                 'guide_number'  => ['required', 'string', 'max:50', 'unique:guides,guide_number,' . $guide->id],
                 'issue_date'    => ['nullable', 'date'],
-                'attached_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'], // Opcional en update
-                'is_active'     => ['required', 'boolean'],
+                'attached_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+                'is_active'     => ['nullable'],
             ], [
                 'guide_number.required' => 'El número de guía es obligatorio.',
                 'guide_number.unique'   => 'El número de guía ya está registrado.',
@@ -191,7 +198,7 @@ class ApiGuideController extends Controller
 
         $guide->guide_number = $request->guide_number;
         $guide->issue_date   = $request->issue_date;
-        $guide->is_active    = $request->is_active;
+        $guide->is_active    = filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN);
 
         if ($request->hasFile('attached_file')) {
             if ($guide->attached_file) {
