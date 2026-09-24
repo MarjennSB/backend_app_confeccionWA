@@ -18,7 +18,8 @@ class ApiDashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $date = $request->query('date');
+        $dateFrom = $request->query('date_from');
+        $dateTo   = $request->query('date_to');
 
         // Consultas base de sumatorias
         $pendingQuery = Invoice::where('payment_status', 'PENDIENTE');
@@ -34,43 +35,54 @@ class ApiDashboardController extends Controller
         $criticalQuery = Invoice::with('production')->where('payment_status', 'PENDIENTE');
         $latestProdQuery = Production::with(['user', 'purchaseOrder']);
 
-        // Aplicar filtro de fecha si existe, si no, es total histórico
-        if ($date) {
-            $pendingQuery->whereDate('issue_date', $date);
-            $incomeQuery->whereDate('issue_date', $date);
-            $productionQuery->whereDate('created_at', $date);
+        // Aplicar filtro de rango de fechas si existe
+        if ($dateFrom && $dateTo) {
+            // Facturas filtradas por fecha de emisión (jueves, cuando se sube la factura)
+            $pendingQuery->whereBetween('issue_date', [$dateFrom, $dateTo]);
+            $incomeQuery->whereBetween('issue_date', [$dateFrom, $dateTo]);
+            $invoicesQuery->whereBetween('issue_date', [$dateFrom, $dateTo]);
+            $criticalQuery->whereBetween('issue_date', [$dateFrom, $dateTo]);
 
-            $guidesQuery->whereDate('issue_date', $date);
-            $invoicesQuery->whereDate('issue_date', $date);
-            $colorsQuery->whereDate('created_at', $date);
-            $purchaseOrdersQuery->whereDate('issue_date', $date);
+            // Producción filtrada por fecha de creación (martes, cuando se registra)
+            $productionQuery->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59']);
+            $latestProdQuery->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59']);
 
-            $criticalQuery->whereDate('issue_date', $date);
-            $latestProdQuery->whereDate('created_at', $date);
+            // Guías y otros módulos por su fecha correspondiente
+            $guidesQuery->whereBetween('issue_date', [$dateFrom, $dateTo]);
+            $colorsQuery->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59']);
+            $purchaseOrdersQuery->whereBetween('issue_date', [$dateFrom, $dateTo]);
+
+        } elseif ($dateFrom) {
+            // Si solo hay fecha de inicio, filtrar desde esa fecha en adelante
+            $pendingQuery->where('issue_date', '>=', $dateFrom);
+            $incomeQuery->where('issue_date', '>=', $dateFrom);
+            $invoicesQuery->where('issue_date', '>=', $dateFrom);
+            $criticalQuery->where('issue_date', '>=', $dateFrom);
+            $productionQuery->where('created_at', '>=', $dateFrom);
+            $latestProdQuery->where('created_at', '>=', $dateFrom);
+            $guidesQuery->where('issue_date', '>=', $dateFrom);
+            $colorsQuery->where('created_at', '>=', $dateFrom);
+            $purchaseOrdersQuery->where('issue_date', '>=', $dateFrom);
         }
 
-        // 1. Totales Financieros y Producción (Ya existentes)
+        // 1. Totales Financieros y Producción
         $pendingInvoicing = (float) $pendingQuery->sum('total_amount');
         $monthlyIncome = (float) $incomeQuery->sum('total_amount');
         $monthlyProduction = (int) $productionQuery->sum('quantity');
 
-        // 2. Nuevos Totales Generales (Para tarjetas)
+        // 2. Totales Generales (Para tarjetas)
         $totalGuides = $guidesQuery->count();
         $totalInvoices = $invoicesQuery->count();
         $totalColors = $colorsQuery->count();
         $totalPurchaseOrders = $purchaseOrdersQuery->count();
 
         // 3. Datos para Gráfico de Dona (Estado de Facturas)
-        // Clonamos la consulta de facturas base (que ya tiene el filtro de fecha aplicado) para contar por estado
         $invoiceStatusData = (clone $invoicesQuery)
             ->selectRaw('payment_status, count(*) as count')
             ->groupBy('payment_status')
             ->get();
 
-        $donutChart = [
-            'pagadas' => 0,
-            'pendientes' => 0,
-        ];
+        $donutChart = ['pagadas' => 0, 'pendientes' => 0];
         foreach ($invoiceStatusData as $status) {
             if ($status->payment_status === 'PAGADA') {
                 $donutChart['pagadas'] = (int) $status->count;
@@ -81,24 +93,26 @@ class ApiDashboardController extends Controller
 
         // 4. Datos para Gráfico de Barras (Tendencia de Producción)
         $barChartQuery = Production::selectRaw('DATE(created_at) as date, sum(quantity) as total');
-        if ($date) {
-            $barChartQuery->whereDate('created_at', $date);
+        if ($dateFrom && $dateTo) {
+            $barChartQuery->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59']);
+        } elseif ($dateFrom) {
+            $barChartQuery->where('created_at', '>=', $dateFrom);
         }
         $productionTrend = $barChartQuery->groupBy('date')->orderBy('date', 'asc')->get();
 
-        // 5. Tendencia de Ingresos (Gráfico de Líneas - Pagadas y Pendientes)
+        // 5. Tendencia de Ingresos (Gráfico de Líneas)
         $incomeTrendQuery = Invoice::query();
-        
-        if ($date) {
-            $parsedDate = Carbon::parse($date);
+
+        if ($dateFrom && $dateTo) {
+            // Vista diaria dentro del rango seleccionado
             $incomeTrendData = $incomeTrendQuery
-                ->whereYear('issue_date', $parsedDate->year)
-                ->whereMonth('issue_date', $parsedDate->month)
-                ->selectRaw('EXTRACT(DAY FROM issue_date) as label, payment_status, sum(total_amount) as total')
+                ->whereBetween('issue_date', [$dateFrom, $dateTo])
+                ->selectRaw('DATE(issue_date) as label, payment_status, sum(total_amount) as total')
                 ->groupBy('label', 'payment_status')
                 ->orderBy('label', 'asc')
                 ->get();
         } else {
+            // Vista mensual del año actual (sin filtro)
             $currentYear = Carbon::now()->year;
             $incomeTrendData = $incomeTrendQuery
                 ->whereYear('issue_date', $currentYear)
