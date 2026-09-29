@@ -208,6 +208,12 @@ class ApiPurchaseOrderController extends Controller
             }
             $path = $request->file('attached_file')->store('purchase_orders');
             $purchaseOrder->attached_file = $path;
+        } else {
+            // DEBUG: Si no detecta el archivo, devolvemos un error para saber qué está llegando
+            if ($request->has('attached_file') || count($_FILES) > 0) {
+                 return response()->json(['mensaje' => 'DEBUG: Archivo detectado pero inválido. Method: ' . $request->method()], 400);
+            }
+            return response()->json(['mensaje' => 'DEBUG: Backend no recibió el archivo. Method: ' . $request->method()], 400);
         }
 
         $purchaseOrder->save();
