@@ -124,7 +124,7 @@ class ApiPurchaseOrderController extends Controller
         $purchaseOrder->is_active    = $request->is_active;
 
         if ($request->hasFile('attached_file')) {
-            $path = $request->file('attached_file')->store('purchase_orders', 'public');
+            $path = $request->file('attached_file')->store('purchase_orders');
             $purchaseOrder->attached_file = $path;
         }
 
@@ -204,9 +204,9 @@ class ApiPurchaseOrderController extends Controller
 
         if ($request->hasFile('attached_file')) {
             if ($purchaseOrder->attached_file) {
-                Storage::disk('public')->delete($purchaseOrder->attached_file);
+                Storage::delete($purchaseOrder->attached_file);
             }
-            $path = $request->file('attached_file')->store('purchase_orders', 'public');
+            $path = $request->file('attached_file')->store('purchase_orders');
             $purchaseOrder->attached_file = $path;
         }
 

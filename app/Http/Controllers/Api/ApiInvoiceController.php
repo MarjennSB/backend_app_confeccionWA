@@ -152,7 +152,7 @@ class ApiInvoiceController extends Controller
         $invoice->is_active      = $request->is_active;
 
         if ($request->hasFile('attached_file')) {
-            $path = $request->file('attached_file')->store('invoices', 'public');
+            $path = $request->file('attached_file')->store('invoices');
             $invoice->attached_file = $path;
         }
 
@@ -255,9 +255,9 @@ class ApiInvoiceController extends Controller
 
         if ($request->hasFile('attached_file')) {
             if ($invoice->attached_file) {
-                Storage::disk('public')->delete($invoice->attached_file);
+                Storage::delete($invoice->attached_file);
             }
-            $path = $request->file('attached_file')->store('invoices', 'public');
+            $path = $request->file('attached_file')->store('invoices');
             $invoice->attached_file = $path;
         }
 

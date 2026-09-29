@@ -14,7 +14,7 @@ class PurchaseOrderResource extends JsonResource
             'order_number'  => $this->order_number,
             'unit_price'    => $this->unit_price,
             'issue_date'    => $this->issue_date,
-            'attached_file' => $this->attached_file ? url('storage/' . $this->attached_file) : null,
+            'attached_file' => $this->attached_file ? \Illuminate\Support\Facades\Storage::url($this->attached_file) : null,
             'is_active'     => $this->is_active,
             'created_at'    => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'    => $this->updated_at?->format('Y-m-d H:i:s'),

@@ -124,7 +124,7 @@ class ApiGuideController extends Controller
         $guide->is_active    = filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN);
 
         if ($request->hasFile('attached_file')) {
-            $path = $request->file('attached_file')->store('guides', 'public');
+            $path = $request->file('attached_file')->store('guides');
             $guide->attached_file = $path;
         } else {
             $guide->attached_file = 'pending'; // Evitar error 500 de base de datos porque el campo no es nullable en Postgres
@@ -202,9 +202,9 @@ class ApiGuideController extends Controller
 
         if ($request->hasFile('attached_file')) {
             if ($guide->attached_file) {
-                Storage::disk('public')->delete($guide->attached_file);
+                Storage::delete($guide->attached_file);
             }
-            $path = $request->file('attached_file')->store('guides', 'public');
+            $path = $request->file('attached_file')->store('guides');
             $guide->attached_file = $path;
         }
 

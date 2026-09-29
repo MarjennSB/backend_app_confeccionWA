@@ -13,7 +13,7 @@ class GuideResource extends JsonResource
             'id'            => $this->id,
             'guide_number'  => $this->guide_number,
             'issue_date'    => $this->issue_date ? \Carbon\Carbon::parse($this->issue_date)->format('Y-m-d') : null,
-            'attached_file' => $this->attached_file ? url('storage/' . $this->attached_file) : null,
+            'attached_file' => $this->attached_file ? \Illuminate\Support\Facades\Storage::url($this->attached_file) : null,
             'is_active'     => $this->is_active,
             'created_at'    => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'    => $this->updated_at?->format('Y-m-d H:i:s'),
