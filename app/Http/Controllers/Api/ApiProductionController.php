@@ -15,6 +15,9 @@ class ApiProductionController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.verify');
+        $this->middleware('can:listar_produccion')->only('index');
+        $this->middleware('can:registrar_produccion')->only('store');
+        $this->middleware('can:editar_produccion')->only('update');
     }
 
     #[OA\Get(

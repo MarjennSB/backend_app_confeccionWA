@@ -16,6 +16,9 @@ class ApiPurchaseOrderController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.verify');
+        $this->middleware('can:listar_orden_servicio')->only('index');
+        $this->middleware('can:registrar_orden_servicio')->only('store');
+        $this->middleware('can:editar_orden_servicio')->only('update');
     }
 
     #[OA\Get(

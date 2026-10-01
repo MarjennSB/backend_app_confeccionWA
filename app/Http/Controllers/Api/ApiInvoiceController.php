@@ -16,6 +16,9 @@ class ApiInvoiceController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.verify');
+        $this->middleware('can:listar_factura')->only('index');
+        $this->middleware('can:registrar_factura')->only('store');
+        $this->middleware('can:editar_factura')->only('update');
     }
 
     #[OA\Get(

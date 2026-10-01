@@ -15,8 +15,9 @@ class ApiColorController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.verify');
-        // Cuando agregues el permiso 'listar_color' en tu seeder, puedes descomentar:
-        // $this->middleware('can:listar_color')->only('index');
+        $this->middleware('can:listar_color')->only('index');
+        $this->middleware('can:registrar_color')->only('store');
+        $this->middleware('can:editar_color')->only('update');
     }
 
     #[OA\Get(

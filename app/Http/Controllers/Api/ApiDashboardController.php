@@ -13,9 +13,11 @@ use Illuminate\Http\Request;
 
 class ApiDashboardController extends Controller
 {
-    /**
-     * Obtiene las métricas y datos clave para el Dashboard.
-     */
+    public function __construct(){
+        $this->middleware('jwt.verify');
+        $this->middleware('can:dashboard')->only('index');
+    }
+
     public function index(Request $request)
     {
         $dateFrom = $request->query('date_from');

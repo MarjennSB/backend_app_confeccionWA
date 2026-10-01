@@ -16,6 +16,9 @@ class ApiGuideController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.verify');
+        $this->middleware('can:listar_guia')->only('index');
+        $this->middleware('can:registrar_guia')->only('store');
+        $this->middleware('can:editar_guia')->only('update');
     }
 
     #[OA\Get(
