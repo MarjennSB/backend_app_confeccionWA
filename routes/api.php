@@ -104,7 +104,7 @@ Route::middleware('jwt.verify')->group(function () {
         ]);
     });
     
-    Route::get('/genres', function () {
+    Route::get('/genders', function () {
         return response()->json([
             'genders' => \App\Models\Gender::where('is_active', true)->get()
         ]);
