@@ -49,6 +49,7 @@ Route::middleware('jwt.verify')->group(function () {
 
     // Gestión de Roles
     Route::prefix('roles')->group(function () {
+        Route::get('/permisos', [ApiRoleController::class, 'permisos']);
         Route::get('/', [ApiRoleController::class, 'index']);
         Route::post('/', [ApiRoleController::class, 'store']);
         Route::put('/{rol}', [ApiRoleController::class, 'update']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class ApiRoleController extends Controller
 {
@@ -37,6 +38,18 @@ class ApiRoleController extends Controller
                     "created_at" => $rol->created_at->format("Y-m-d h:i:s")
                 ];
             }),
+        ]);
+    }
+
+    /**
+     * Devuelve todos los permisos disponibles en el sistema.
+     */
+    public function permisos()
+    {
+        $permisos = Permission::where('guard_name', 'api')->orderBy('name')->get(['id', 'name', 'description']);
+
+        return response()->json([
+            'permisos' => $permisos,
         ]);
     }
 
