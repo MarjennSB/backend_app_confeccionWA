@@ -97,4 +97,17 @@ Route::middleware('jwt.verify')->group(function () {
         Route::put('/{usuario}', [ApiUserController::class, 'update']);
     });
 
+    // Parámetros para formularios (Tipos de documento, géneros)
+    Route::get('/document-types', function () {
+        return response()->json([
+            'document_types' => \App\Models\DocumentType::where('is_active', true)->get()
+        ]);
+    });
+    
+    Route::get('/genres', function () {
+        return response()->json([
+            'genders' => \App\Models\Gender::where('is_active', true)->get()
+        ]);
+    });
+
 });
